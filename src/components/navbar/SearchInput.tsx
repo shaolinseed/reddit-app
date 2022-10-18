@@ -15,18 +15,15 @@ const SearchInput: React.FC<Props> = () => {
           <SearchIcon color="gray.300" mb="1" />
         </InputLeftElement>
         <Input
+          focusBorderColor="pink.200"
           placeholder="Search..."
           _placeholder={{ color: "gray.500" }}
           fontSize="10pt"
           _hover={{
             bg: "white",
-            border: "1px solid",
-            borderColor: "brand.100",
           }}
           _focus={{
             outline: "none",
-            border: "1px solid",
-            borderColor: "brand.100",
           }}
           height="34px"
           bg="gray.50"
