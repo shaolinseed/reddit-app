@@ -1,29 +1,27 @@
 import { extendTheme } from "@chakra-ui/react"
-import "@fontsource/source-sans-pro/300.css"
-import "@fontsource/source-sans-pro/400.css"
-import "@fontsource/source-sans-pro/700.css"
 import { Button } from "./button"
 
-const theme = extendTheme({
+export const theme = extendTheme({
   colors: {
     brand: {
       100: "#ff0075",
+      200: "#FF268A",
     },
   },
   fonts: {
-    body: "Source Sans Pro, sans-serif",
+    body: "Open Sans, sans-serif",
   },
   styles: {
     global: () => ({
       body: {
-        bg: "teal.50",
+        bg: "gray.200",
         color: "black",
       },
     }),
   },
   components: {
     Button,
+
+    // Input, // not working for some reason - come back to this
   },
 })
-
-export { theme }

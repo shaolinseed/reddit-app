@@ -23,20 +23,15 @@ const Button: ComponentStyleConfig = {
       color: "white",
       bg: "brand.100",
       _hover: {
-        bg: "pink.300",
+        bg: "brand.200",
       },
     },
     outline: {
       color: "brand.100",
-      border: "1px solid",
+      border: "2px solid",
       borderColor: "pink.500",
-    },
-    oauth: {
-      height: "34px",
-      border: "1px solid",
-      borderColor: "gray.300",
       _hover: {
-        bg: "gray.50",
+        bg: "pink.50",
       },
     },
   },
