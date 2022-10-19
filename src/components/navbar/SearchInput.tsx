@@ -3,10 +3,10 @@ import { Flex, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
 import React from "react"
 
 type Props = {
-  // user:
+  user: any
 }
 
-const SearchInput: React.FC<Props> = () => {
+const SearchInput: React.FC<Props> = ({ user }) => {
   return (
     //Flex grow uses up remaining space
     <Flex flexGrow="1" mr="2" align="center">

@@ -1,20 +1,27 @@
 import { Button, Divider, Flex, Input, Text } from "@chakra-ui/react"
 import { useAtom } from "jotai"
 import React, { useEffect, useState } from "react"
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"
 import { authModalAtom } from "../../../atoms/authModalState"
 import GoogleButton from "./GoogleButton"
-
+import { auth } from "../../../firebase/clientApp"
+import { firebaseErrors } from "../../../firebase/errors"
 type LogInProps = {}
 
 const LogIn: React.FC<LogInProps> = () => {
   const [, setAuthModalState] = useAtom(authModalAtom)
-  const [, setLoginFrm] = useState({
+  const [logInFrm, setLoginFrm] = useState({
     email: "",
     password: "",
   })
 
-  const onSubmit = () => {
+  const [signInWithEmailAndPassword, user, loading, signInError] =
+    useSignInWithEmailAndPassword(auth)
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     // console.log("yo")
+    signInWithEmailAndPassword(logInFrm.email, logInFrm.password)
   }
   const onChange = ({
     target: { name, value },
@@ -35,7 +42,7 @@ const LogIn: React.FC<LogInProps> = () => {
         borderWidth="1px"
         mb={6}
       />
-      <form>
+      <form onSubmit={onSubmit}>
         <Input
           required
           name="email"
@@ -70,11 +77,20 @@ const LogIn: React.FC<LogInProps> = () => {
           focusBorderColor="pink.400"
           fontSize="11pt"
         />
-
-        <Button type="submit" width="100%" height="38px" mt="2" mb="2">
+        <Text textAlign="center" color="red" fontSize="10pt">
+          {firebaseErrors[signInError?.message as keyof typeof firebaseErrors]}
+        </Text>
+        <Button
+          type="submit"
+          width="100%"
+          height="38px"
+          mt="2"
+          mb="2"
+          isLoading={loading}
+        >
           Log In
         </Button>
-        <Flex fontSize="10pt" justifyContent="center">
+        <Flex fontSize="10pt" justifyContent="center" direction="row">
           <Text mr={1}>Don&#39;t have an account?</Text>
           <Text
             color="brand.100"
@@ -83,11 +99,27 @@ const LogIn: React.FC<LogInProps> = () => {
             onClick={() => {
               setAuthModalState((prev) => ({
                 ...prev,
-                view: "signUp",
+                view: "createAccount",
               }))
             }}
           >
             Create Account
+          </Text>
+        </Flex>
+        <Flex mt={2} fontSize="9pt" justifyContent="center" direction="row">
+          <Text mr={1}>Forgot your password?</Text>
+          <Text
+            color="brand.300"
+            fontWeight="700"
+            cursor="pointer"
+            onClick={() => {
+              setAuthModalState((prev) => ({
+                ...prev,
+                view: "resetPassword",
+              }))
+            }}
+          >
+            Reset
           </Text>
         </Flex>
       </form>

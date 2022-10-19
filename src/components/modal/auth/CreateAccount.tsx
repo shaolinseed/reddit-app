@@ -3,6 +3,9 @@ import { useAtom } from "jotai"
 import React, { useEffect, useState } from "react"
 import { authModalAtom } from "../../../atoms/authModalState"
 import GoogleButton from "./GoogleButton"
+import { auth } from "../../../firebase/clientApp"
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
+import { firebaseErrors } from "../../../firebase/errors"
 
 const CreateAccount: React.FC = () => {
   const [, setAuthModalState] = useAtom(authModalAtom)
@@ -11,9 +14,27 @@ const CreateAccount: React.FC = () => {
     password: "",
     confirmPassword: "",
   })
+  const [error, setError] = useState("")
 
-  const onSubmit = () => {
-    console.log("yo")
+  // https://github.com/CSFrequency/react-firebase-hooks/tree/master/auth#usecreateuserwithemailandpassword
+  const [createUserWithEmailAndPassword, user, loading, createAccountError] =
+    useCreateUserWithEmailAndPassword(auth)
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // prevent form from refreshing page
+    event.preventDefault()
+    // reset error
+    if (error) setError("")
+
+    // If passwords match
+    if (createAccountFrm.password === createAccountFrm.confirmPassword) {
+      createUserWithEmailAndPassword(
+        createAccountFrm.email,
+        createAccountFrm.password
+      )
+    } else {
+      setError("Passwords do not match")
+    }
   }
   const onChange = ({
     target: { name, value },
@@ -34,7 +55,7 @@ const CreateAccount: React.FC = () => {
         borderWidth="1px"
         mb={6}
       />
-      <form>
+      <form onSubmit={onSubmit}>
         <Input
           fontSize="11pt"
           required
@@ -86,8 +107,22 @@ const CreateAccount: React.FC = () => {
           }}
           focusBorderColor="pink.400"
         />
-
-        <Button type="submit" width="100%" height="38px" mt="2" mb="2">
+        {(error || createAccountError) && (
+          <Text textAlign="center" color="red" fontSize="10pt">
+            {error ||
+              firebaseErrors[
+                createAccountError?.message as keyof typeof firebaseErrors
+              ]}
+          </Text>
+        )}
+        <Button
+          type="submit"
+          width="100%"
+          height="38px"
+          mt="2"
+          mb="2"
+          isLoading={loading}
+        >
           Create Account
         </Button>
         <Flex fontSize="10pt" justifyContent="center">

@@ -2,7 +2,7 @@ import { atom } from "jotai"
 
 export interface authModalState {
   open: boolean
-  view: "logIn" | "signUp" | "resetPassword"
+  view: "logIn" | "createAccount" | "resetPassword"
 }
 
 export const defaultModalState = {

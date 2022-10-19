@@ -4,6 +4,7 @@ import React from "react"
 import { authModalAtom } from "../../../atoms/authModalState"
 import LogIn from "./LogIn"
 import CreateAccount from "./CreateAccount"
+import ResetPassword from "./ResetPassword"
 
 type Props = {}
 
@@ -12,7 +13,8 @@ const AuthInputs: React.FC<Props> = () => {
   return (
     <Flex direction="column" align="center" width="100%" mt="4">
       {authModalState.view === "logIn" && <LogIn />}
-      {authModalState.view === "signUp" && <CreateAccount />}
+      {authModalState.view === "createAccount" && <CreateAccount />}
+      {authModalState.view === "resetPassword" && <ResetPassword />}
     </Flex>
   )
 }

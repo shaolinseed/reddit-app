@@ -5,9 +5,12 @@ import React from "react"
 import RemainingContent from "./remainingContent/RemainingContent"
 import SearchInput from "./SearchInput"
 import { authModalAtom } from "../../atoms/authModalState"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth } from "../../firebase/clientApp"
 
 const Navbar: React.FC = () => {
   const [stakeAddress, setStakeAddress] = useAtom(authModalAtom)
+  const [user, loading, userError] = useAuthState(auth)
   console.log(stakeAddress)
 
   return (
@@ -21,8 +24,8 @@ const Navbar: React.FC = () => {
           display={{ base: "none", md: "unset" }}
         />
       </Flex>
-      <SearchInput />
-      <RemainingContent />
+      <SearchInput user={user} />
+      <RemainingContent user={user} />
       {/* <Directory />
       <SearchInput />
       <RightContent /> */}
