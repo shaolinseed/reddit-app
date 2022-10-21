@@ -26,7 +26,6 @@ const Icons: React.FC = () => {
           cursor="pointer"
           borderRadius={4}
           _hover={{ bg: "gray.100" }}
-          pad
         >
           <Icon as={BsArrowUpRightCircle} fontSize={22} color="brand.100" />
         </Flex>
