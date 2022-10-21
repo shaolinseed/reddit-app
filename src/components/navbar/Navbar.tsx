@@ -7,6 +7,7 @@ import SearchInput from "./SearchInput"
 import { authModalAtom } from "../../atoms/authModalState"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "../../firebase/clientApp"
+import Features from "./features/Features"
 
 const Navbar: React.FC = () => {
   const [stakeAddress, setStakeAddress] = useAtom(authModalAtom)
@@ -14,8 +15,18 @@ const Navbar: React.FC = () => {
   console.log(stakeAddress)
 
   return (
-    <Flex bg="white" height="44px" py="6px" px="12px">
-      <Flex align="center">
+    <Flex
+      bg="white"
+      height="44px"
+      py="6px"
+      px="12px"
+      justify={{ md: "space-between" }}
+    >
+      <Flex
+        align="center"
+        width={{ base: "40px", md: "auto" }}
+        mr={{ base: 0, md: 2 }}
+      >
         <Image src="/images/redditFace.svg" height="30px" alt="" />
         <Image
           src="/images/redditText.svg"
@@ -24,11 +35,9 @@ const Navbar: React.FC = () => {
           display={{ base: "none", md: "unset" }}
         />
       </Flex>
+      {user && <Features />}
       <SearchInput user={user} />
       <RemainingContent user={user} />
-      {/* <Directory />
-      <SearchInput />
-      <RightContent /> */}
     </Flex>
   )
 }
