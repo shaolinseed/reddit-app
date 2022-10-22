@@ -15,9 +15,12 @@ import {
   Text,
   Icon,
 } from "@chakra-ui/react"
+import { auth, firestoreInstance } from "../../../firebase/clientApp"
 import React, { useState } from "react"
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs"
 import { HiLockClosed } from "react-icons/hi"
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore"
+import { useAuthState } from "react-firebase-hooks/auth"
 type CreateCommunityModalProps = {
   open: boolean
   closeModal: () => void
@@ -30,6 +33,9 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   const [communityName, setCommunityName] = useState("")
   const [charactersRemaining, setCharactersRemaining] = useState(21)
   const [communityType, setCommunityType] = useState("public")
+  const [error, setError] = useState("")
+  const [user] = useAuthState(auth)
+  const [loading, setLoading] = useState(false)
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 21) {
@@ -37,6 +43,49 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
     }
     setCommunityName(event.target.value)
     setCharactersRemaining(21 - event.target.value.length)
+  }
+
+  const onCreateCommunity = async () => {
+    // if valid community name
+    if (/^[a-z0-9]+$/i.test(communityName) && communityName.length >= 3) {
+      setError("")
+      setLoading(true)
+      try {
+        // community name is used as ID as all community names are unique
+        const communityDocRef = doc(
+          firestoreInstance,
+          "communities",
+          communityName
+        )
+        const communityDoc = await getDoc(communityDocRef)
+
+        // check if duplicate community name
+        if (communityDoc.exists()) {
+          setLoading(false)
+
+          throw new Error(
+            `Sorry, r/${communityName} is taken. Please try a different name.`
+          )
+        } else {
+          await setDoc(communityDocRef, {
+            creatorId: user?.uid,
+            timeCreated: serverTimestamp(),
+            memberCount: 1,
+            privacyType: communityType,
+          })
+        }
+        setLoading(false)
+      } catch (error: any) {
+        console.log("handlecommunityerror ", error)
+        setError(error.message)
+      }
+    }
+    // invalid community name
+    else {
+      setError(
+        "Community names can&#39;t have special characters and must be 3-21 characters long"
+      )
+    }
   }
 
   const onCommunityTypeChange = (
@@ -81,6 +130,9 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
                 color={charactersRemaining == 0 ? "red" : "gray.500"}
               >
                 {charactersRemaining} Characters remaining...
+              </Text>
+              <Text fontSize="9pt" color="red" pt={1}>
+                {error}
               </Text>
               <Box my="4">
                 <Text fontWeight="600" fontSize={15}>
@@ -154,7 +206,11 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
             >
               Cancel
             </Button>
-            <Button bgColor="brand.100" onClick={() => {}}>
+            <Button
+              bgColor="brand.100"
+              onClick={onCreateCommunity}
+              isLoading={loading}
+            >
               Create Community
             </Button>
           </ModalFooter>
