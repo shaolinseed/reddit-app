@@ -8,12 +8,11 @@ import { firestoreInstance } from "../../../firebase/clientApp"
 import Header from "../../../components/community/Header"
 import PageContent from "../../../components/layouts/PageContent"
 import CreatePostLink from "../../../components/navbar/features/CreatePostLink"
+import Posts from "../../../components/posts/Posts"
 type Props = {
   communityData: Community
 }
 const CommunityPage: NextPage<Props> = ({ communityData }) => {
-  console.log(communityData)
-
   if (!communityData) {
     return <NotFound />
   }
@@ -25,6 +24,7 @@ const CommunityPage: NextPage<Props> = ({ communityData }) => {
       <PageContent>
         <>
           <CreatePostLink />
+          <Posts communityData={communityData} />
         </>
         <>
           <div>rhs</div>
