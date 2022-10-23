@@ -1,7 +1,7 @@
 import { Button, Center, Divider, Flex, Input, Text } from "@chakra-ui/react"
 import { useAtom } from "jotai"
 import React, { useEffect, useState } from "react"
-import { authModalAtom } from "../../../atoms/authModalState"
+import { authModalAtom } from "../../../store/authModalState"
 import GoogleButton from "./GoogleButton"
 import { auth } from "../../../firebase/clientApp"
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"

@@ -10,6 +10,10 @@ export const defaultModalState = {
   view: "logIn",
 }
 
+/**
+ * Store the auth modal state in jotai to allow
+ * multiple components to access the state
+ */
 export const authModalAtom = atom<authModalState>({
   open: false,
   view: "logIn",

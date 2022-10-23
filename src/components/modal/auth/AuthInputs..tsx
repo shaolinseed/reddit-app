@@ -1,7 +1,7 @@
 import { Flex, Modal } from "@chakra-ui/react"
 import { useAtom } from "jotai"
 import React from "react"
-import { authModalAtom } from "../../../atoms/authModalState"
+import { authModalAtom } from "../../../store/authModalState"
 import LogIn from "./LogIn"
 import CreateAccount from "./CreateAccount"
 import ResetPassword from "./ResetPassword"

@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react"
 import { useAtom } from "jotai"
 import React from "react"
-import { authModalAtom } from "../../../atoms/authModalState"
+import { authModalAtom } from "../../../store/authModalState"
 
 const AuthButtons: React.FC = () => {
   const [, setAuthModalState] = useAtom(authModalAtom)

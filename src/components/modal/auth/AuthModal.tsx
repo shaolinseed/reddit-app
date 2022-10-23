@@ -13,7 +13,7 @@ import {
 import { useAtom } from "jotai"
 import React, { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
-import { authModalAtom } from "../../../atoms/authModalState"
+import { authModalAtom } from "../../../store/authModalState"
 import { auth } from "../../../firebase/clientApp"
 import AuthInputs from "./AuthInputs."
 
@@ -24,7 +24,6 @@ const AuthModal: React.FC = () => {
   useEffect(() => {
     if (user) {
       closeModal()
-      console.log(user)
     }
   }, [user])
 

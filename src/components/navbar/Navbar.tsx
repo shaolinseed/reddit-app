@@ -4,7 +4,7 @@ import React from "react"
 
 import RemainingContent from "./remainingContent/RemainingContent"
 import SearchInput from "./SearchInput"
-import { authModalAtom } from "../../atoms/authModalState"
+import { authModalAtom } from "../../store/authModalState"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "../../firebase/clientApp"
 import Features from "./features/Features"
@@ -12,7 +12,6 @@ import Features from "./features/Features"
 const Navbar: React.FC = () => {
   const [stakeAddress, setStakeAddress] = useAtom(authModalAtom)
   const [user, loading, userError] = useAuthState(auth)
-  console.log(stakeAddress)
 
   return (
     <Flex

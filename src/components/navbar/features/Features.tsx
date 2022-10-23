@@ -2,7 +2,7 @@ import { Flex, Icon, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react"
 import { useAtom } from "jotai"
 import React from "react"
 import { IoChevronDown } from "react-icons/io5"
-import { authModalAtom } from "../../../atoms/authModalState"
+import { authModalAtom } from "../../../store/authModalState"
 import { TiHome } from "react-icons/ti"
 import Communities from "./Communities"
 
