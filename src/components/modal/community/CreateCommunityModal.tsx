@@ -19,7 +19,13 @@ import { auth, firestoreInstance } from "../../../firebase/clientApp"
 import React, { useState } from "react"
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs"
 import { HiLockClosed } from "react-icons/hi"
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore"
+import {
+  doc,
+  getDoc,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore"
 import { useAuthState } from "react-firebase-hooks/auth"
 type CreateCommunityModalProps = {
   open: boolean
@@ -57,26 +63,47 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
           "communities",
           communityName
         )
-        const communityDoc = await getDoc(communityDocRef)
 
-        // check if duplicate community name
-        if (communityDoc.exists()) {
-          setLoading(false)
+        /*
+        Firebase transactions (if one operaiton fails, whole trnasaction fails. all operations must be applied)
+        Transaction maintains a high level of data integrity
+        We are using transaction over batched write as we also need a read operation
+        */
+        await runTransaction(firestoreInstance, async (transaction) => {
+          const communityDoc = await transaction.get(communityDocRef)
 
-          throw new Error(
-            `Sorry, r/${communityName} is taken. Please try a different name.`
-          )
-        } else {
-          await setDoc(communityDocRef, {
+          // check if duplicate community name
+          if (communityDoc.exists()) {
+            // ends the transaction
+            throw new Error(
+              `Sorry, r/${communityName} is taken. Please try a different name.`
+            )
+          }
+
+          // set the community data
+          transaction.set(communityDocRef, {
             creatorId: user?.uid,
             timeCreated: serverTimestamp(),
             memberCount: 1,
             privacyType: communityType,
           })
-        }
+
+          // add community association to user data
+          transaction.set(
+            doc(
+              firestoreInstance,
+              `users/${user?.uid}/communitySnippets`,
+              communityName
+            ),
+            {
+              communityId: communityName,
+              isModerator: true,
+            }
+          )
+        })
+
         setLoading(false)
       } catch (error: any) {
-        console.log("handlecommunityerror ", error)
         setError(error.message)
       }
     }
