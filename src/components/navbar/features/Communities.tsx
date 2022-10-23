@@ -14,7 +14,9 @@ const Communities: React.FC<CommunitiesProps> = () => {
         width="100%"
         fontSize="10pt"
         _hover={{ bg: "gray.50" }}
+        _focus={{ bg: "gray.50" }}
         onClick={() => setOpen(true)}
+        bgColor="white"
       >
         <Flex>
           <Icon as={BsPlusCircle} fontSize="20" mr="2" />
