@@ -7,20 +7,20 @@ type Props = {
   onChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void
-  onCreatePost: () => void
+  processCreatePost: () => void
   loading: boolean
 }
 
 const TextPost: React.FC<Props> = ({
   textInputs,
   onChange,
-  onCreatePost,
+  processCreatePost: onCreatePost,
   loading,
 }) => {
   return (
     <Stack spacing="3" width="100%">
       <Input
-        fontSize="10pt"
+        fontSize="11pt"
         borderRadius="4"
         name="title"
         placeholder="Title"
@@ -31,7 +31,7 @@ const TextPost: React.FC<Props> = ({
       />
       <Textarea
         height="160px"
-        fontSize="10pt"
+        fontSize="11pt"
         borderRadius="4"
         name="body"
         placeholder="Post content"
