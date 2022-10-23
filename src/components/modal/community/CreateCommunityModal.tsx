@@ -110,7 +110,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
     // invalid community name
     else {
       setError(
-        "Community names can&#39;t have special characters and must be 3-21 characters long"
+        "Community names can't have special characters and must be 3-21 characters long"
       )
     }
   }
@@ -150,6 +150,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
                 pl="22px"
                 position="relative"
                 onChange={onInputChange}
+                color="black"
               />
               <Text
                 mt="1"
