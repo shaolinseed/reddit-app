@@ -14,7 +14,6 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage"
 import { useAtom } from "jotai"
 import moment from "moment"
 import Link from "next/link"
-import { useRouter } from "next/router"
 import React, { useRef, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { FaReddit } from "react-icons/fa"
@@ -30,7 +29,6 @@ type Props = {
 
 const About: React.FC<Props> = ({ communityData }) => {
   const [user] = useAuthState(auth)
-  const router = useRouter()
   const [uploading, setUploading] = useState(false)
   const [, setCommunity] = useAtom(communityAtom)
 
@@ -106,7 +104,7 @@ const About: React.FC<Props> = ({ communityData }) => {
               </Text>
             )}
           </Flex>
-          <Link href={`/r/${router.query.communityName}/submit`}>
+          <Link href={`/r/${communityData.id}/submit`}>
             <Button mt="4" height="32px">
               Create Post
             </Button>
