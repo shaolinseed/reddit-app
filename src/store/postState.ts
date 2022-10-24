@@ -23,13 +23,13 @@ type PostVote = {
 }
 
 interface PostState {
-  selectedPost: Post | null
+  openPost: Post | null
   posts: Post[]
   postVotes: PostVote[]
 }
 
 const defaultPostState: PostState = {
-  selectedPost: null,
+  openPost: null,
   posts: [],
   postVotes: [],
 }
