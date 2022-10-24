@@ -6,8 +6,9 @@ import usePosts from "../../hooks/usePosts"
 import { Post } from "../../store/postState"
 import PostElement from "./PostElement"
 import { useAuthState } from "react-firebase-hooks/auth"
-import { Stack } from "@chakra-ui/react"
+import { GridItem, Stack } from "@chakra-ui/react"
 import PostLoader from "./PostLoader"
+import { VscRadioTower } from "react-icons/vsc"
 
 type Props = {
   communityData: Community
@@ -67,7 +68,10 @@ const Posts: React.FC<Props> = ({ communityData }) => {
             <PostElement
               post={element}
               isUserAuthor={user?.uid === element.creatorId}
-              userVoteValue={undefined}
+              userVoteValue={
+                posts.postVotes.find((vote) => vote.postId === element.id)
+                  ?.voteValue
+              }
               onVote={onVote}
               onOpenPost={onOpenPost}
               onDeletePost={onDeletePost}
