@@ -30,7 +30,7 @@ type Props = {
   post: Post
   isUserAuthor: boolean
   userVoteValue?: number
-  onVote: () => void
+  onVote: (post: Post, vote: number, communityId: string) => void
   onDeletePost: (post: Post) => Promise<boolean>
   onOpenPost: () => void
 }
@@ -88,7 +88,7 @@ const PostElement: React.FC<Props> = ({
             userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
           }
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
-          onClick={onVote}
+          onClick={() => onVote(post, 1, post.communityId)}
           cursor="pointer"
         />
         <Text fontSize="10pt">{post.voteStatus}</Text>
@@ -100,7 +100,7 @@ const PostElement: React.FC<Props> = ({
               : IoArrowDownCircleOutline
           }
           color={userVoteValue === -1 ? "#4379ff" : "gray.400"}
-          onClick={onVote}
+          onClick={() => onVote(post, -1, post.communityId)}
           cursor="pointer"
         />
       </Flex>
@@ -147,7 +147,7 @@ const PostElement: React.FC<Props> = ({
             cursor="pointer"
           >
             <Icon as={BsChat} mr="2" />
-            <Text fontSize="10pt" ml="0">
+            <Text fontSize="10pt" ml="0" _focus={{ outline: "none" }}>
               {post.commentCount}
             </Text>
           </Flex>
