@@ -59,12 +59,11 @@ const useCommunityAtom = () => {
         ...doc.data(),
       }))
 
-      setCommunity([...(snippets as CommunitySnippet[])])
-
-      console.log("here are snippys : ", snippets)
-    } catch (error) {
-      console.log("getmysnippets, err: ", error)
-    }
+      setCommunity((prev) => ({
+        ...prev,
+        userSnippets: snippets as CommunitySnippet[],
+      }))
+    } catch (error) {}
     setLoading(false)
   }
 
@@ -97,13 +96,17 @@ const useCommunityAtom = () => {
       await batch.commit()
 
       // Update atom - append new snippet to communities array
-      setCommunity([...community, newSnippet])
+      setCommunity((prev) => ({
+        ...prev,
+        mySnippets: [...prev.userSnippets, newSnippet],
+      }))
     } catch (error: any) {
       console.log("joinCommunityError: ", error)
       setError(error.message)
     }
     setLoading(false)
   }
+
   const leaveCommunity = async (communityId: string) => {
     // Create a new community snippet and add to user data
     // Using batch as we do not need to read from the db in these operations
@@ -126,11 +129,12 @@ const useCommunityAtom = () => {
     await batch.commit()
 
     // Update atom
-    setCommunity(
-      [...community].filter(
-        (community) => community.communityId !== communityId
-      )
-    )
+    setCommunity((prev) => ({
+      ...prev,
+      mySnippets: prev.userSnippets.filter(
+        (element) => element.communityId !== communityId
+      ),
+    }))
 
     try {
     } catch (error: any) {
