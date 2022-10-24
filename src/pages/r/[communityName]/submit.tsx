@@ -1,14 +1,17 @@
 import { Box } from "@chakra-ui/react"
 import React from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
+import About from "../../../components/community/About"
 import PageContent from "../../../components/layouts/PageContent"
 import NewPostFrm from "../../../components/posts/NewPostFrm"
 import { auth } from "../../../firebase/clientApp"
+import useCommunityAtom from "../../../hooks/useCommunityAtom"
 
 type Props = {}
 
 const SubmitPostPage: React.FC<Props> = () => {
   const [user] = useAuthState(auth)
+  const { community } = useCommunityAtom()
 
   return (
     <PageContent>
@@ -25,7 +28,11 @@ const SubmitPostPage: React.FC<Props> = () => {
         {user && <NewPostFrm user={user} />}
       </>
 
-      <></>
+      <>
+        {community.currentCommunity && (
+          <About communityData={community.currentCommunity} />
+        )}
+      </>
     </PageContent>
   )
 }
