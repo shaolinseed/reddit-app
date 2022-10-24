@@ -10,11 +10,13 @@ import { useAuthState } from "react-firebase-hooks/auth"
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   writeBatch,
 } from "firebase/firestore"
 import { authModalAtom } from "../store/authModalState"
+import { useRouter } from "next/router"
 
 const useCommunityAtom = () => {
   const [community, setCommunity] = useAtom(communityAtom)
@@ -23,11 +25,30 @@ const useCommunityAtom = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
+  const router = useRouter()
+
   useEffect(() => {
+    // if user is logged in get user snippets
     if (user?.uid) {
       getUserSnippets()
+    } else {
+      // clear userSnippets if no user found
+      setCommunity((prev) => ({
+        ...prev,
+        userSnippets: [],
+      }))
     }
   }, [user])
+
+  useEffect(() => {
+    const { communityName } = router.query
+
+    // if url contains a community name but no currentCommunity state is found
+    // this would happen if user is refreshing page or visiting for first time
+    if (communityName && !community.currentCommunity) {
+      getCommunityData(communityName as string)
+    }
+  }, [community.currentCommunity, router.query])
 
   const onJoinOrLeaveCommunity = (
     communityData: Community,
@@ -143,6 +164,27 @@ const useCommunityAtom = () => {
     }
   }
 
+  const getCommunityData = async (communityName: string) => {
+    try {
+      const communityDocRef = doc(
+        firestoreInstance,
+        "communities",
+        communityName
+      )
+
+      const communityDoc = await getDoc(communityDocRef)
+
+      setCommunity((prev) => ({
+        ...prev,
+        currentCommunity: {
+          id: community.id,
+          ...communityDoc.data(),
+        } as Community,
+      }))
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
   return {
     community,
     onJoinOrLeaveCommunity,
