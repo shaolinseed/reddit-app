@@ -1,4 +1,4 @@
-import { Alert, Flex, Icon } from "@chakra-ui/react"
+import { Alert, AlertIcon, Flex, Icon } from "@chakra-ui/react"
 import React, { ReactComponentElement, useId, useState } from "react"
 import { IoDocumentText, IoImageOutline } from "react-icons/io5"
 import PostTypeTab from "./PostTypeTab"
@@ -161,7 +161,12 @@ const NewPostFrm: React.FC<Props> = ({ user }) => {
           )}
         </Flex>
       </Flex>
-      {error && <Alert></Alert>}
+      {error && (
+        <Alert status="error">
+          <AlertIcon />
+          <Text mr="2">Error creating post</Text>
+        </Alert>
+      )}
     </Flex>
   )
 }
