@@ -11,7 +11,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { NextRouter } from "next/router"
+import { NextRouter, useRouter } from "next/router"
 import { AiOutlineDelete } from "react-icons/ai"
 import { BsChat, BsDot } from "react-icons/bs"
 import { FaReddit } from "react-icons/fa"
@@ -30,9 +30,16 @@ type Props = {
   post: Post
   isUserAuthor: boolean
   userVoteValue?: number
-  onVote: (post: Post, vote: number, communityId: string) => void
+
+  onVote: (
+    post: Post,
+    vote: number,
+    communityId: string,
+    event: React.MouseEvent<SVGElement, MouseEvent>
+  ) => void
   onDeletePost: (post: Post) => Promise<boolean>
-  onOpenPost: () => void
+  // only pass onOpenPost if on actual post page (not community or home page)
+  onOpenPost?: (post: Post) => void
 }
 
 const PostElement: React.FC<Props> = ({
@@ -45,10 +52,18 @@ const PostElement: React.FC<Props> = ({
 }) => {
   const [loadingImage, setLoadingImage] = useState(true)
   const [loadingDelete, setLoadingDelete] = useState(false)
-
   const [error, setError] = useState(false)
 
-  const processDeletePost = async () => {
+  const router = useRouter()
+
+  // if openPost is passed we are on the actual post page
+  const actualPostPage = !onOpenPost
+
+  const processDeletePost = async (
+    event: React.MouseEvent<SVGElement, MouseEvent>
+  ) => {
+    // prevent double click action on delete button click
+    event.stopPropagation()
     setLoadingDelete(true)
     try {
       const success = await onDeletePost(post)
@@ -56,6 +71,11 @@ const PostElement: React.FC<Props> = ({
       if (!success) throw new Error("Unable to delete post")
 
       console.log("Post deleted successfully!")
+
+      //if on actual post page redirect user back to community page
+      if (actualPostPage) {
+        router.push(`/r/${post.communityId}`)
+      }
     } catch (error: any) {
       setError(error.message)
     }
@@ -67,20 +87,22 @@ const PostElement: React.FC<Props> = ({
     <Flex
       border="1px solid"
       bg="white"
-      borderColor="gray.300"
-      borderRadius="4"
-      _hover={{ borderColor: "gray.500" }}
-      cursor="pointer"
-      onClick={onOpenPost}
+      borderRadius={actualPostPage ? "4px 4px 0px 0px" : "4px"}
+      borderColor={actualPostPage ? "white" : "gray.300"}
+      _hover={{ borderColor: actualPostPage ? "none" : "gray.400" }}
+      cursor={actualPostPage ? "unset" : "pointer"}
+      // call onOpenPost if onOpenPost returns true
+      onClick={(event) => onOpenPost && onOpenPost(post)}
+      borderWidth="2px"
       p="2"
     >
       <Flex
         direction="column"
         align="center"
-        bg="gray.100"
+        bg={actualPostPage ? "none" : "gray.100"}
         p="2"
         width="40px"
-        borderRadius="4"
+        borderRadius={actualPostPage ? "0" : "3px 0px 0px 3px"}
       >
         <Icon
           fontSize="24"
@@ -88,7 +110,7 @@ const PostElement: React.FC<Props> = ({
             userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
           }
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
-          onClick={() => onVote(post, 1, post.communityId)}
+          onClick={(event) => onVote(post, 1, post.communityId, event)}
           cursor="pointer"
         />
         <Text fontSize="10pt">{post.voteStatus}</Text>
@@ -100,7 +122,7 @@ const PostElement: React.FC<Props> = ({
               : IoArrowDownCircleOutline
           }
           color={userVoteValue === -1 ? "#4379ff" : "gray.400"}
-          onClick={() => onVote(post, -1, post.communityId)}
+          onClick={(event) => onVote(post, -1, post.communityId, event)}
           cursor="pointer"
         />
       </Flex>
