@@ -177,7 +177,7 @@ const useCommunityAtom = () => {
       setCommunity((prev) => ({
         ...prev,
         currentCommunity: {
-          id: community.id,
+          id: communityDoc.id,
           ...communityDoc.data(),
         } as Community,
       }))
