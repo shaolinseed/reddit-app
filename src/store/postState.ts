@@ -15,18 +15,26 @@ type Post = {
   timeCreated: Timestamp
 }
 
+type PostVote = {
+  id: string
+  postId: string
+  communityId: string
+  voteValue: number
+}
+
 interface PostState {
   selectedPost: Post | null
   posts: Post[]
-  // postRating
+  postVotes: PostVote[]
 }
 
 const defaultPostState: PostState = {
   selectedPost: null,
   posts: [],
+  postVotes: [],
 }
 
 const postsAtom = atom<PostState>(defaultPostState)
 
-export type { Post }
+export type { Post, PostVote }
 export { postsAtom }
