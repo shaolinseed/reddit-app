@@ -105,12 +105,12 @@ const NewPostFrm: React.FC<Props> = ({ user }) => {
           imageUrl: downloadUrl,
         })
       }
+      // if post successful send user back
+      router.back()
     } catch (error: any) {
       setError(true)
     }
     setLoading(false)
-
-    // router.back()
 
     // store post in database
     // store image in firebase storage if necessary
