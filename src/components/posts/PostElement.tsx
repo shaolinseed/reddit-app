@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { Post } from "../../store/postState"
 import {
+  Alert,
+  AlertIcon,
   Flex,
   Icon,
   Image,
@@ -29,7 +31,7 @@ type Props = {
   isUserAuthor: boolean
   userVoteValue?: number
   onVote: () => void
-  onDeletePost: () => void
+  onDeletePost: (post: Post) => Promise<boolean>
   onOpenPost: () => void
 }
 
@@ -42,6 +44,24 @@ const PostElement: React.FC<Props> = ({
   onOpenPost,
 }) => {
   const [loadingImage, setLoadingImage] = useState(true)
+  const [loadingDelete, setLoadingDelete] = useState(false)
+
+  const [error, setError] = useState(false)
+
+  const processDeletePost = async () => {
+    setLoadingDelete(true)
+    try {
+      const success = await onDeletePost(post)
+
+      if (!success) throw new Error("Unable to delete post")
+
+      console.log("Post deleted successfully!")
+    } catch (error: any) {
+      setError(error.message)
+    }
+
+    setLoadingDelete(true)
+  }
 
   return (
     <Flex
@@ -85,6 +105,12 @@ const PostElement: React.FC<Props> = ({
         />
       </Flex>
       <Flex direction="column" width="100%">
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            <Text mr="2">{error}</Text>
+          </Alert>
+        )}
         <Stack p="2">
           <Stack direction="row" spacing="0.6" align="center" fontSize="10pt">
             <Text>
@@ -160,11 +186,16 @@ const PostElement: React.FC<Props> = ({
               borderRadius="4"
               _hover={{ bg: "gray.200" }}
               cursor="pointer"
+              onClick={processDeletePost}
             >
-              <Icon as={AiOutlineDelete} mr="2" fontSize="19" />
-              <Text fontSize="10pt" ml="0">
-                {post.commentCount}
-              </Text>
+              {loadingDelete ? (
+                <Spinner size="s" />
+              ) : (
+                <>
+                  <Icon as={AiOutlineDelete} mr={2} />
+                  <Text fontSize="9pt">Delete</Text>
+                </>
+              )}
             </Flex>
           )}
         </Flex>
