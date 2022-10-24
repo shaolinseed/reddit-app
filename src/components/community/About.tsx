@@ -14,7 +14,8 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage"
 import { useAtom } from "jotai"
 import moment from "moment"
 import Link from "next/link"
-import React, { useRef, useState } from "react"
+import { useRouter } from "next/router"
+import React, { useEffect, useRef, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { FaReddit } from "react-icons/fa"
 import { HiOutlineDotsHorizontal } from "react-icons/hi"
@@ -31,6 +32,8 @@ const About: React.FC<Props> = ({ communityData }) => {
   const [user] = useAuthState(auth)
   const [uploading, setUploading] = useState(false)
   const [, setCommunity] = useAtom(communityAtom)
+
+  const { asPath } = useRouter()
 
   const { uploadedFile, setUploadedFile, onUploadFile } = useUploadFile()
 
@@ -62,6 +65,7 @@ const About: React.FC<Props> = ({ communityData }) => {
   return (
     <Box position="sticky" top="16px">
       <Flex
+        mt={asPath.includes("submit") ? "63px" : "3px"}
         justify="space-between"
         align="center"
         bg="brand.200"
