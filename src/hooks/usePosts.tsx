@@ -9,9 +9,11 @@ import {
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import { useAtom } from "jotai"
+import { useRouter } from "next/router"
 import React, { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth, firestoreInstance, storage } from "../firebase/clientApp"
+import { authModalAtom } from "../store/authModalState"
 import { communityAtom, currentCommunityAtom } from "../store/communityState"
 import { Post, postsAtom, PostVote } from "../store/postState"
 
@@ -21,16 +23,44 @@ import { Post, postsAtom, PostVote } from "../store/postState"
  */
 const usePosts = () => {
   const [posts, setPosts] = useAtom(postsAtom)
-
+  const [, setAuthModal] = useAtom(authModalAtom)
   const [currentCommunity] = useAtom(currentCommunityAtom)
   const [user] = useAuthState(auth)
+
+  const router = useRouter()
 
   useEffect(() => {
     if (!currentCommunity?.id || !user) return
     getCommunityPostVotes(currentCommunity.id)
   }, [currentCommunity, user])
 
-  const onVote = async (post: Post, vote: number, communityId: string) => {
+  useEffect(() => {
+    // if no user logged in clear the post votes state
+    if (!user) {
+      setPosts((prev) => ({
+        ...prev,
+        postVotes: [],
+      }))
+    }
+  }, [user])
+
+  const onVote = async (
+    post: Post,
+    vote: number,
+    communityId: string,
+    event: React.MouseEvent<SVGElement, MouseEvent>
+  ) => {
+    // prevent double click action on post vote click
+    event.stopPropagation()
+
+    // if user is not logged in prompt sign in
+    if (!user?.uid) {
+      setAuthModal({
+        open: true,
+        view: "logIn",
+      })
+    }
+
     const { voteStatus } = post
 
     console.log(posts.postVotes)
@@ -150,6 +180,13 @@ const usePosts = () => {
         posts: updatedPosts,
         postVotes: updatedPostVotes,
       }))
+
+      if (posts.openPost) {
+        setPosts((prev) => ({
+          ...prev,
+          openPost: updatedPost,
+        }))
+      }
     } catch (error) {
       console.log("Errors: ", error)
     }
@@ -183,7 +220,15 @@ const usePosts = () => {
     }))
   }
 
-  const onOpenPost = async () => {}
+  const onOpenPost = async (post: Post) => {
+    setPosts((prev) => ({
+      ...prev,
+      openPost: post,
+    }))
+
+    // redirect user to opened post
+    router.push(`/r/${post.communityId}/comments/${post.id}`)
+  }
   const onDeletePost = async (post: Post): Promise<boolean> => {
     try {
       // if post contains image
