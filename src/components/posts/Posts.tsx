@@ -7,6 +7,7 @@ import { Post } from "../../store/postState"
 import PostElement from "./PostElement"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { Stack } from "@chakra-ui/react"
+import PostLoader from "./PostLoader"
 
 type Props = {
   communityData: Community
@@ -21,6 +22,8 @@ const Posts: React.FC<Props> = ({ communityData }) => {
   const [loading, setLoading] = useState(false)
 
   const getPosts = async () => {
+    setLoading(true)
+
     try {
       // Query to find posts in current community (descending order)
       const postsQuery = query(
@@ -47,6 +50,7 @@ const Posts: React.FC<Props> = ({ communityData }) => {
     } catch (error: any) {
       console.log("getPosts erorr: ", error.message)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -54,19 +58,25 @@ const Posts: React.FC<Props> = ({ communityData }) => {
   }, [])
 
   return (
-    <Stack>
-      {posts.posts.map((element) => (
-        <PostElement
-          post={element}
-          isUserAuthor={user?.uid === element.creatorId}
-          userVoteValue={undefined}
-          onVote={onVote}
-          onOpenPost={onOpenPost}
-          onDeletePost={onDeletePost}
-          key={element.id}
-        />
-      ))}
-    </Stack>
+    <>
+      {loading ? (
+        <PostLoader />
+      ) : (
+        <Stack>
+          {posts.posts.map((element) => (
+            <PostElement
+              post={element}
+              isUserAuthor={user?.uid === element.creatorId}
+              userVoteValue={undefined}
+              onVote={onVote}
+              onOpenPost={onOpenPost}
+              onDeletePost={onDeletePost}
+              key={element.id}
+            />
+          ))}
+        </Stack>
+      )}
+    </>
   )
 }
 export default Posts

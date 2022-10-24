@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Post } from "../../store/postState"
 import {
   Flex,
@@ -41,6 +41,8 @@ const PostElement: React.FC<Props> = ({
   onDeletePost,
   onOpenPost,
 }) => {
+  const [loadingImage, setLoadingImage] = useState(true)
+
   return (
     <Flex
       border="1px solid"
@@ -90,15 +92,82 @@ const PostElement: React.FC<Props> = ({
               {moment(new Date(post.timeCreated?.seconds * 1000)).fromNow()}
             </Text>
           </Stack>
-          <Text fontSize="12pt" fontWeight="600">
+          <Text fontSize="12pt" fontWeight="700">
             {post.title}
           </Text>
+          <Text fontSize="11pt">{post.body}</Text>
           {post.imageUrl && (
-            <Flex justify="center" p="2">
-              <Image src={post.imageUrl} />
+            <Flex justify="center" p="2" align="center">
+              {loadingImage && (
+                <Skeleton height="200px" width="100%" borderRadius="4" />
+              )}
+              <Image
+                maxHeight="475px"
+                src={post.imageUrl}
+                alt="Post Image"
+                onLoad={() => setLoadingImage(false)}
+                display={loadingImage ? "none" : "unset"}
+              />
             </Flex>
           )}
         </Stack>
+        <Flex ml="1" mb={0.5} color="gray.500" fontWeight="600">
+          <Flex
+            align="center"
+            py="8px"
+            px="10px"
+            borderRadius="4"
+            _hover={{ bg: "gray.200" }}
+            cursor="pointer"
+          >
+            <Icon as={BsChat} mr="2" />
+            <Text fontSize="10pt" ml="0">
+              {post.commentCount}
+            </Text>
+          </Flex>
+          <Flex
+            align="center"
+            py="8px"
+            px="10px"
+            borderRadius="4"
+            _hover={{ bg: "gray.200" }}
+            cursor="pointer"
+          >
+            <Icon as={IoArrowRedoOutline} mr="2" fontSize="20" />
+            <Text fontSize="10pt" ml="0">
+              Share
+            </Text>
+          </Flex>
+          <Flex
+            align="center"
+            py="8px"
+            px="10px"
+            borderRadius="4"
+            _hover={{ bg: "gray.200" }}
+            cursor="pointer"
+          >
+            <Icon as={IoBookmarkOutline} mr="2" fontSize="19" />
+            <Text fontSize="10pt" ml="0">
+              {post.commentCount}
+            </Text>
+          </Flex>
+          {/* display delete option if user is author */}
+          {isUserAuthor && (
+            <Flex
+              align="center"
+              py="8px"
+              px="10px"
+              borderRadius="4"
+              _hover={{ bg: "gray.200" }}
+              cursor="pointer"
+            >
+              <Icon as={AiOutlineDelete} mr="2" fontSize="19" />
+              <Text fontSize="10pt" ml="0">
+                {post.commentCount}
+              </Text>
+            </Flex>
+          )}
+        </Flex>
       </Flex>
     </Flex>
   )
