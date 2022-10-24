@@ -1,6 +1,7 @@
 import { Timestamp } from "@google-cloud/firestore"
 import { atom } from "jotai"
 import { atomWithReset } from "jotai/utils"
+import { focusAtom } from "jotai/optics"
 
 interface Community {
   id: string
@@ -26,6 +27,8 @@ const communityAtom = atomWithReset<CommunityState>({
   userSnippets: [],
 })
 
+const currentCommunityAtom = atom((get) => get(communityAtom).currentCommunity)
+
 export type { Community, CommunitySnippet }
 
-export { communityAtom }
+export { communityAtom, currentCommunityAtom }
