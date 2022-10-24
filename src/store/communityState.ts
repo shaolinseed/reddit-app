@@ -19,10 +19,12 @@ interface CommunitySnippet {
 
 interface CommunityState {
   userSnippets: CommunitySnippet[]
-  //   visitedCommunities
+  currentCommunity?: Community
 }
 
-const communityAtom = atomWithReset<CommunitySnippet[]>([])
+const communityAtom = atomWithReset<CommunityState>({
+  userSnippets: [],
+})
 
 export type { Community, CommunitySnippet }
 
