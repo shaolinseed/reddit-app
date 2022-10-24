@@ -29,11 +29,9 @@ type Props = {
 
 const UserMenu: React.FC<Props> = ({ user }) => {
   const [, setAuthModalState] = useAtom(authModalAtom)
-  const resetCommunity = useResetAtom(communityAtom)
 
   const logOut = async () => {
     await signOut(auth)
-    resetCommunity()
   }
 
   return (
