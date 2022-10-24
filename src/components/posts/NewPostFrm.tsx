@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore"
 import { firestoreInstance, storage } from "../../firebase/clientApp"
 import { getDownloadURL, ref, uploadString } from "firebase/storage"
+import useUploadFile from "../../hooks/useUploadFile"
 
 type Props = {
   user: User
@@ -47,29 +48,16 @@ const NewPostFrm: React.FC<Props> = ({ user }) => {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [openTab, setOpenTab] = useState(postTypeTabs[0].title)
-  const [uploadedFile, setUploadedFile] = useState<string>()
+  const { uploadedFile, setUploadedFile, onUploadFile } = useUploadFile()
   const [textInputs, setTextInputs] = useState<PostContent>({
     title: "",
     body: "",
   })
 
   const router = useRouter()
+
   // Extract community name from router
   const { communityName } = router.query
-
-  const onUploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileReader = new FileReader()
-
-    if (event.target.files?.[0]) {
-      fileReader.readAsDataURL(event.target.files[0])
-    }
-
-    fileReader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setUploadedFile(readerEvent.target.result as string)
-      }
-    }
-  }
 
   const processCreatePost = async () => {
     // create new post object
