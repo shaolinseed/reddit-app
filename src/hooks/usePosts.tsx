@@ -25,6 +25,11 @@ const usePosts = () => {
   const [currentCommunity] = useAtom(currentCommunityAtom)
   const [user] = useAuthState(auth)
 
+  useEffect(() => {
+    if (!currentCommunity?.id || !user) return
+    getCommunityPostVotes(currentCommunity.id)
+  }, [currentCommunity, user])
+
   const onVote = async (post: Post, vote: number, communityId: string) => {
     const { voteStatus } = post
 
@@ -148,6 +153,34 @@ const usePosts = () => {
     } catch (error) {
       console.log("Errors: ", error)
     }
+  }
+
+  /**
+   * Retreives the votes the currently signed in user has in the
+   * community they are currently browsing
+   * @param communityId - the ID / Name of the community to search
+   */
+  const getCommunityPostVotes = async (communityId: string) => {
+    // Create firestore query
+    const postVotesQuery = query(
+      // select postvotes collection from users collection
+      collection(firestoreInstance, "users", `${user?.uid}/postVotes`),
+      where("communityId", "==", communityId)
+    )
+    // get array of firebase docs from DB
+    const postVoteDocs = await getDocs(postVotesQuery)
+
+    // store postVotes docs as JS object
+    const postVotes = postVoteDocs.docs.map((element) => ({
+      id: element.id,
+      ...element.data(),
+    }))
+
+    // update jotai state to include the posts voted on by the user
+    setPosts((prev) => ({
+      ...prev,
+      postVotes: postVotes as PostVote[],
+    }))
   }
 
   const onOpenPost = async () => {}
