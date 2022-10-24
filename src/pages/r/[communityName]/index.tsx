@@ -1,18 +1,29 @@
 import { doc, getDoc } from "firebase/firestore"
 import { GetServerSidePropsContext, NextPage } from "next"
-import React from "react"
+import React, { useEffect } from "react"
 import safeJsonStringify from "safe-json-stringify"
 import NotFound from "../../../components/community/NotFound"
-import { Community } from "../../../store/communityState"
+import { Community, communityAtom } from "../../../store/communityState"
 import { firestoreInstance } from "../../../firebase/clientApp"
 import Header from "../../../components/community/Header"
 import PageContent from "../../../components/layouts/PageContent"
 import CreatePostLink from "../../../components/navbar/features/CreatePostLink"
 import Posts from "../../../components/posts/Posts"
+import { useAtom } from "jotai"
+import About from "../../../components/community/About"
 type Props = {
   communityData: Community
 }
 const CommunityPage: NextPage<Props> = ({ communityData }) => {
+  const [, setCommunity] = useAtom(communityAtom)
+
+  useEffect(() => {
+    setCommunity((prev) => ({
+      ...prev,
+      currentCommunity: communityData,
+    }))
+  }, [])
+
   if (!communityData) {
     return <NotFound />
   }
@@ -27,7 +38,7 @@ const CommunityPage: NextPage<Props> = ({ communityData }) => {
           <Posts communityData={communityData} />
         </>
         <>
-          <div>rhs</div>
+          <About communityData={communityData} />
         </>
       </PageContent>
     </>
