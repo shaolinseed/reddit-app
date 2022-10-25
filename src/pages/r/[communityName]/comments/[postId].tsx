@@ -1,3 +1,4 @@
+import { User } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
@@ -62,6 +63,11 @@ const PostPage: NextPage = () => {
             isUserAuthor={user?.uid === posts.openPost?.creatorId}
           />
         )}
+        <Comments
+          user={user as User}
+          openPost={posts.openPost}
+          communityId={posts.openPost?.communityId as string}
+        />
       </>
       {/* RHS */}
 
