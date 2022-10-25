@@ -17,12 +17,13 @@ type Props = {
 const CommunityPage: NextPage<Props> = ({ communityData }) => {
   const [, setCommunity] = useAtom(communityAtom)
 
+  // update community state when communityData changes
   useEffect(() => {
     setCommunity((prev) => ({
       ...prev,
       currentCommunity: communityData,
     }))
-  }, [])
+  }, [communityData])
 
   if (!communityData) {
     return <NotFound />
