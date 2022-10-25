@@ -1,7 +1,6 @@
 
 <h1 align="center">Reddit Clone</h1>
-
-🚧 This project is under construction
+View live project: https://reddit-app-three.vercel.app/
 
 ## Stack
 
