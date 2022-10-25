@@ -27,15 +27,15 @@ import {
   setDoc,
 } from "firebase/firestore"
 import { useAuthState } from "react-firebase-hooks/auth"
-type CreateCommunityModalProps = {
+import { useRouter } from "next/router"
+
+type Props = {
   open: boolean
   closeModal: () => void
 }
 
-const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
-  open,
-  closeModal,
-}) => {
+const CreateCommunityModal: React.FC<Props> = ({ open, closeModal }) => {
+  const router = useRouter()
   const [communityName, setCommunityName] = useState("")
   const [charactersRemaining, setCharactersRemaining] = useState(21)
   const [communityType, setCommunityType] = useState("public")
@@ -101,6 +101,10 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
             }
           )
         })
+
+        router.push(`r/${communityName}`)
+
+        closeModal()
 
         setLoading(false)
       } catch (error: any) {
