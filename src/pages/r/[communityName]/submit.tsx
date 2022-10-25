@@ -25,7 +25,12 @@ const SubmitPostPage: React.FC<Props> = () => {
         >
           Create a Post
         </Box>
-        {user && <NewPostFrm user={user} />}
+        {user && (
+          <NewPostFrm
+            user={user}
+            communityImageUrl={community.currentCommunity?.imageUrl as string}
+          />
+        )}
       </>
 
       <>
