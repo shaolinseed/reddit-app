@@ -36,6 +36,7 @@ const useCommunityAtom = () => {
       setCommunity((prev) => ({
         ...prev,
         userSnippets: [],
+        snippetsFetched: false,
       }))
     }
   }, [user])
@@ -84,6 +85,7 @@ const useCommunityAtom = () => {
       setCommunity((prev) => ({
         ...prev,
         userSnippets: snippets as CommunitySnippet[],
+        snippetsFetched: true,
       }))
     } catch (error) {}
     setLoading(false)
