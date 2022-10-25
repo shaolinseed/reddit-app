@@ -63,8 +63,6 @@ const usePosts = () => {
 
     const { voteStatus } = post
 
-    console.log(posts.postVotes)
-
     // find post of current post (return undefined if not found)
     const existingVote = posts.postVotes.find(
       (element) => element.postId === post.id
@@ -98,8 +96,6 @@ const usePosts = () => {
           communityId,
           voteValue: vote,
         }
-
-        console.log("NEW VOTE!!!", newVote)
 
         batch.set(postVoteRef, newVote)
 
