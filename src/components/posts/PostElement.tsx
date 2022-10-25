@@ -59,9 +59,7 @@ const PostElement: React.FC<Props> = ({
   // if openPost is passed we are on the actual post page
   const actualPostPage = !onOpenPost
 
-  const processDeletePost = async (
-    event: React.MouseEvent<SVGElement, MouseEvent>
-  ) => {
+  const processDeletePost = async (event: React.MouseEvent<HTMLDivElement>) => {
     // prevent double click action on delete button click
     event.stopPropagation()
     setLoadingDelete(true)
