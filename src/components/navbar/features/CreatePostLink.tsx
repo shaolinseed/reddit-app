@@ -7,12 +7,15 @@ import { BsLink45Deg } from "react-icons/bs"
 import { FaReddit } from "react-icons/fa"
 import { IoImageOutline } from "react-icons/io5"
 import { auth } from "../../../firebase/clientApp"
+import useFeatures from "../../../hooks/useFeatures"
 import { authModalAtom } from "../../../store/authModalState"
 
 const CreatePostLink: React.FC = () => {
   const router = useRouter()
   const [user] = useAuthState(auth)
   const [, setAuthModal] = useAtom(authModalAtom)
+
+  const { toggleMenuOpen } = useFeatures()
 
   const onClick = () => {
     if (!user) {
@@ -25,8 +28,13 @@ const CreatePostLink: React.FC = () => {
 
     const { communityName } = router.query
 
-    // send to submit page
-    router.push(`/r/${communityName}/submit`)
+    if (communityName) {
+      // send to submit page
+      router.push(`/r/${communityName}/submit`)
+      return
+    }
+
+    toggleMenuOpen()
   }
 
   return (
