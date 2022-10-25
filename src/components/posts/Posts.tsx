@@ -54,9 +54,10 @@ const Posts: React.FC<Props> = ({ communityData }) => {
     setLoading(false)
   }
 
+  // update posts when user switches communities
   useEffect(() => {
     getPosts()
-  }, [])
+  }, [communityData])
 
   return (
     <>
