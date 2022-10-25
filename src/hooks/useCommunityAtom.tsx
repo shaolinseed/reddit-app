@@ -52,17 +52,18 @@ const useCommunityAtom = () => {
 
   const onJoinOrLeaveCommunity = (
     communityData: Community,
-    isMember: boolean
+    isJoined: boolean
   ) => {
-    // if user isn't logged in display modal
+    // is the user signed in?
+    // if not => open auth modal
     if (!user) {
-      setAuthModal({
-        open: true,
-        view: "logIn",
-      })
+      // open modal
+      setAuthModal({ open: true, view: "logIn" })
+      return
     }
 
-    if (isMember) {
+    setLoading(true)
+    if (isJoined) {
       leaveCommunity(communityData.id)
       return
     }
@@ -119,7 +120,7 @@ const useCommunityAtom = () => {
       // Update atom - append new snippet to communities array
       setCommunity((prev) => ({
         ...prev,
-        mySnippets: [...prev.userSnippets, newSnippet],
+        userSnippets: [...prev.userSnippets, newSnippet],
       }))
     } catch (error: any) {
       console.log("joinCommunityError: ", error)
@@ -152,7 +153,7 @@ const useCommunityAtom = () => {
     // Update atom
     setCommunity((prev) => ({
       ...prev,
-      mySnippets: prev.userSnippets.filter(
+      userSnippets: prev.userSnippets.filter(
         (element) => element.communityId !== communityId
       ),
     }))
@@ -162,6 +163,7 @@ const useCommunityAtom = () => {
       console.log("leaveCommunityError: ", error)
       setError(error.message)
     }
+    setLoading(false)
   }
 
   const getCommunityData = async (communityName: string) => {
