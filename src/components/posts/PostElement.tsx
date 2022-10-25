@@ -30,7 +30,6 @@ type Props = {
   post: Post
   isUserAuthor: boolean
   userVoteValue?: number
-
   onVote: (
     post: Post,
     vote: number,
@@ -40,6 +39,7 @@ type Props = {
   onDeletePost: (post: Post) => Promise<boolean>
   // only pass onOpenPost if on actual post page (not community or home page)
   onOpenPost?: (post: Post) => void
+  homePage?: boolean
 }
 
 const PostElement: React.FC<Props> = ({
@@ -49,6 +49,7 @@ const PostElement: React.FC<Props> = ({
   onVote,
   onDeletePost,
   onOpenPost,
+  homePage,
 }) => {
   const [loadingImage, setLoadingImage] = useState(true)
   const [loadingDelete, setLoadingDelete] = useState(false)
@@ -133,6 +134,34 @@ const PostElement: React.FC<Props> = ({
         )}
         <Stack p="2">
           <Stack direction="row" spacing="0.6" align="center" fontSize="10pt">
+            {homePage && (
+              <>
+                {post.communityImageUrl ? (
+                  <Image
+                    src={post.communityImageUrl}
+                    borderRadius="full"
+                    boxSize="18px"
+                    mr="2"
+                    alt="Community Image"
+                  />
+                ) : (
+                  <Icon
+                    as={FaReddit}
+                    fontSize="18pt"
+                    mr="1"
+                    color="brand.100"
+                  />
+                )}
+                <Link href={`r/${post.communityId}`}>
+                  <Text
+                    fontWeight="700"
+                    _hover={{ textDecoration: "underline" }}
+                    onClick={(event) => event.stopPropagation()}
+                  >{`r/${post.communityId}`}</Text>
+                </Link>
+                <Icon as={BsDot} color="gray.600" fontSize="10" />
+              </>
+            )}
             <Text>
               Posted by u/{post.creatorUsername}{" "}
               {moment(new Date(post.timeCreated?.seconds * 1000)).fromNow()}
@@ -194,7 +223,7 @@ const PostElement: React.FC<Props> = ({
           >
             <Icon as={IoBookmarkOutline} mr="2" fontSize="19" />
             <Text fontSize="10pt" ml="0">
-              {post.commentCount}
+              Save
             </Text>
           </Flex>
           {/* display delete option if user is author */}
