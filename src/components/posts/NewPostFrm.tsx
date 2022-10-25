@@ -21,6 +21,7 @@ import useUploadFile from "../../hooks/useUploadFile"
 
 type Props = {
   user: User
+  communityImageUrl: string
 }
 
 const postTypeTabs: PostTypeTab[] = [
@@ -42,9 +43,10 @@ export type PostTypeTab = {
 export type PostContent = {
   title: string
   body: string
+  communityImageUrl?: string
 }
 
-const NewPostFrm: React.FC<Props> = ({ user }) => {
+const NewPostFrm: React.FC<Props> = ({ user, communityImageUrl }) => {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [openTab, setOpenTab] = useState(postTypeTabs[0].title)
@@ -70,6 +72,8 @@ const NewPostFrm: React.FC<Props> = ({ user }) => {
       commentCount: 0,
       voteStatus: 0,
       timeCreated: serverTimestamp() as Timestamp,
+      // pass empty string if no image url for firebase
+      communityImageUrl: communityImageUrl || "",
     }
 
     setLoading(true)
