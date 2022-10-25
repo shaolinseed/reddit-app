@@ -21,10 +21,12 @@ interface CommunitySnippet {
 interface CommunityState {
   userSnippets: CommunitySnippet[]
   currentCommunity?: Community
+  snippetsFetched: boolean
 }
 
 const communityAtom = atomWithReset<CommunityState>({
   userSnippets: [],
+  snippetsFetched: false,
 })
 
 const currentCommunityAtom = atom((get) => get(communityAtom).currentCommunity)
