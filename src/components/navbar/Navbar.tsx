@@ -8,10 +8,13 @@ import { authModalAtom } from "../../store/authModalState"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "../../firebase/clientApp"
 import Features from "./features/Features"
+import useFeatures from "../../hooks/useFeatures"
+import { defaultMenuElement } from "../../store/communityMenuState"
 
 const Navbar: React.FC = () => {
-  const [stakeAddress, setStakeAddress] = useAtom(authModalAtom)
   const [user, loading, userError] = useAuthState(auth)
+
+  const { onMenuElementClick } = useFeatures()
 
   return (
     <Flex
@@ -23,8 +26,10 @@ const Navbar: React.FC = () => {
     >
       <Flex
         align="center"
+        cursor="pointer"
         width={{ base: "40px", md: "auto" }}
         mr={{ base: 0, md: 2 }}
+        onClick={() => onMenuElementClick(defaultMenuElement)}
       >
         <Image src="/images/redditFace.svg" height="30px" alt="" />
         <Image
