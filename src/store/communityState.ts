@@ -28,7 +28,8 @@ const communityAtom = atomWithReset<CommunityState>({
 })
 
 const currentCommunityAtom = atom((get) => get(communityAtom).currentCommunity)
+const userSnippetsAtom = atom((get) => get(communityAtom).userSnippets)
 
 export type { Community, CommunitySnippet }
 
-export { communityAtom, currentCommunityAtom }
+export { communityAtom, currentCommunityAtom, userSnippetsAtom }
