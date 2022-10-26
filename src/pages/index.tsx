@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react"
+import { Button, IconButton, Flex, Icon, Stack, Text } from "@chakra-ui/react"
 import {
   collection,
   doc,
@@ -14,6 +14,7 @@ import Head from "next/head"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
+import { BsGithub } from "react-icons/bs"
 import PersonalHome from "../components/community/Personal"
 import Recommendations from "../components/community/Recommendations"
 import PageContent from "../components/layouts/PageContent"
@@ -25,6 +26,8 @@ import useCommunityAtom from "../hooks/useCommunityAtom"
 import usePosts from "../hooks/usePosts"
 import { communityAtom } from "../store/communityState"
 import { Post, PostVote } from "../store/postState"
+
+import { Link } from "@chakra-ui/react"
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false)
@@ -191,6 +194,18 @@ const Home: NextPage = () => {
       <Stack spacing="8">
         <Recommendations />
         <PersonalHome />
+
+        <Link href="https://github.com/shaolinseed/reddit-app" isExternal>
+          <Button
+            leftIcon={<BsGithub fontSize="14pt" />}
+            bg="#333"
+            variant="solid"
+            width="100%"
+            _hover={{ color: "brand.200" }}
+          >
+            Github Repo
+          </Button>
+        </Link>
       </Stack>
     </PageContent>
   )
