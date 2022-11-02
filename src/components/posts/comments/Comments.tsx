@@ -217,7 +217,7 @@ const Comments: React.FC<Props> = ({ user, openPost, communityId }) => {
                     comment={element}
                     processDeleteComment={processDeleteComment}
                     loadingDelete={loadingDeleteId === element.id}
-                    userId={user.uid}
+                    userId={user?.uid}
                   />
                 ))}
               </>
